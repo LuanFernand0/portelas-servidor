@@ -18,3 +18,16 @@ Feito em Java 17 com Spring Boot 3 e MySQL.
 Para gerar o arquivo que roda online: `mvn package` (gera o `.jar` na pasta `target`).
 
 O site (Astro) fica em outro repositório e conversa com este servidor pela porta 8080.
+
+## Publicar num servidor (Ubuntu 24.04)
+Como root no servidor, um único comando instala tudo: Java, MySQL, Node.js, Caddy com HTTPS e firewall.
+Ele baixa este repositório e o do site, gera as senhas e liga o site:
+
+```
+curl -fsSL https://raw.githubusercontent.com/LuanFernand0/portelas-servidor/main/deploy/instalar.sh | bash -s -- seudominio.com.br
+```
+
+- Rodar o mesmo comando de novo **atualiza** o site e o servidor; senhas e fotos são mantidas.
+- Para levar os dados existentes, coloque antes no servidor o arquivo `/root/portelas-banco.sql` (exportado do MySQL) e a pasta `/root/uploads`. O script importa os dois.
+- O domínio precisa apontar (registro A) para o IP do servidor para o HTTPS funcionar.
+
