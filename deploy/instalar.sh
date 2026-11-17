@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Instala (ou atualiza) o site e o servidor da Portela's Marcenaria num Ubuntu 24.04.
+# Instala (ou atualiza) o site e o servidor da Portela's Marcenaria num Ubuntu 24.04 ou 22.04.
 # Uso, como root:
 #   curl -fsSL https://raw.githubusercontent.com/LuanFernand0/portelas-servidor/main/deploy/instalar.sh | bash -s -- seudominio.com.br
 # Sem domínio (só pelo IP), rode sem o último argumento.
@@ -23,7 +23,14 @@ senha() { tr -dc 'A-Za-z0-9' </dev/urandom | head -c "${1:-24}"; }
 passo "Instalando programas (Java 17, Maven, MySQL, Node.js, Caddy)"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -q
-apt-get install -y -q openjdk-17-jdk-headless maven mysql-server git caddy ufw rsync curl ca-certificates unattended-upgrades
+apt-get install -y -q curl ca-certificates gnupg
+# Ubuntu 22.04 (ex.: VPS da HostGator) não traz o Caddy nos repositórios: usa o repositório oficial do Caddy.
+if ! apt-cache show caddy >/dev/null 2>&1; then
+  curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt > /etc/apt/sources.list.d/caddy-stable.list
+  apt-get update -q
+fi
+apt-get install -y -q openjdk-17-jdk-headless maven mysql-server git caddy ufw rsync unattended-upgrades
 if ! command -v node >/dev/null || [ "$(node -p 'process.versions.node.split(".")[0]')" -lt 20 ]; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
   apt-get install -y -q nodejs
