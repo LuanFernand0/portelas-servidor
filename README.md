@@ -19,7 +19,7 @@ Para gerar o arquivo que roda online: `mvn package` (gera o `.jar` na pasta `tar
 
 O site (Astro) fica em outro repositório e conversa com este servidor pela porta 8080.
 
-## Publicar num servidor (Ubuntu 24.04 (ou 22.04))
+## Publicar num servidor (Ubuntu 24.04 ou 22.04)
 Como root no servidor, um único comando instala tudo: Java, MySQL, Node.js, Caddy com HTTPS e firewall.
 Ele baixa este repositório e o do site, gera as senhas e liga o site:
 
